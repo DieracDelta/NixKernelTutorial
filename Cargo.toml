@@ -1,0 +1,10 @@
+[dependencies]
+
+[lib]
+path = "src/lib.rs"
+crate-type = ["staticlib"]
+
+[package]
+edition = "2018"
+name = "rust_uland"
+version = "0.1.0"
