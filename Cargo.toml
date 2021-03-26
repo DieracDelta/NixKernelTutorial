@@ -8,3 +8,4 @@ crate-type = ["staticlib"]
 edition = "2018"
 name = "rust_uland"
 version = "0.1.0"
+links = "lib"
