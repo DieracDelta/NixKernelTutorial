@@ -1,11 +1,13 @@
+[package]
+name = "blog_os"
+version = "0.1.0"
+authors = ["jrestivo"]
+edition = "2018"
+
 [dependencies]
 
-[lib]
-path = "src/lib.rs"
-crate-type = ["staticlib"]
+[profile.dev]
+panic = "abort"
 
-[package]
-edition = "2018"
-name = "rust_uland"
-version = "0.1.0"
-links = "lib"
+[profile.release]
+panic = "abort"
