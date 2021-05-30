@@ -53,6 +53,10 @@
         root = ./.;
         cargoBuild = orig: "CARGO_BUILD_TARGET_DIR=$out cargo rustc --release --target=\"riscv64imac-unknown-none-elf\" -- -Clink-arg=-Tlinker.ld -Ccode-model=medium";
       };
+      sample_usage = pkgs.writeScript "run_toy_kernel" ''
+        #!/usr/bin/env bash
+        ${pkgs.qemu}/bin/qemu-system-riscv64 -bios ${sample_package}/riscv64imac-unknown-none-elf/release/nix_example_kernel -machine sifive_u
+      '';
   in
   {
     devShell.x86_64-linux = pkgs.mkShell {
@@ -62,7 +66,7 @@
     packages.riscv64-linux.defaultPackage = sample_package;
     apps.x86_64-linux.toy_kernel = {
       type = "app";
-      program = "${pkgs.qemu}/bin/qemu-system-riscv64 -bios ${sample_package}/riscv64imac-unknown-none-elf/release/nix_example_kernel -machine sifive_u";
+      program = "${sample_usage}";
     };
     defaultApp.x86_64-linux = self.apps.x86_64-linux.toy_kernel;
   };
