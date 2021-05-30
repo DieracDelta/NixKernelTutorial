@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "blog_os"
+name = "nix_example_kernel"
 version = "0.1.0"
