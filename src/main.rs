@@ -1,6 +1,6 @@
 #![no_std]
 #![no_main]
-#![feature(asm)]
+#![feature(asm, llvm_asm)]
 #![feature(naked_functions)]
 
 use core::panic::PanicInfo;
@@ -16,14 +16,10 @@ pub extern "C" fn _start() -> ! {
     unsafe {
         asm!(
             "
-                lui  gp, %hi({gp})
-                addi gp, gp, %lo({gp})
-                lui  sp, %hi({end_stack})
-                addi sp, sp, %lo({end_stack})
+                li sp, 0x80290000
                 j main
             ",
-            gp = const 0x80000000 as u64,
-            end_stack = const 0x80200000 as u64,
+            //end_stack = const 0x80290000 as i64,
             options(noreturn)
         );
     }
@@ -32,12 +28,9 @@ pub extern "C" fn _start() -> ! {
 #[no_mangle]
 pub extern "C" fn main() -> ! {
     unsafe {
-        *(0x10010008 as *const u8 as *mut u8) = 1;
-        *(0x1001000C as *const u8 as *mut u8) = 1;
-        *(0x10010010 as *const u8 as *mut u8) = 0;
-        write_char('h' as u8);
-        write_char('i' as u8);
-        write_char('\n' as u8);
+        "hello world from a nixified rust kernel :D\n"
+            .chars()
+            .for_each(|c| write_char(c as u8));
     }
     loop {}
 }
@@ -46,20 +39,14 @@ pub extern "C" fn main() -> ! {
 fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
-//"
-////li a7, 0x1
-////lb a0, $0
-//ecall
-//",
 
 unsafe fn write_char(ch: u8) {
-    while *(0x10010000 as *const u8 as *mut u8) <= 0 {}
-    *(0x10010000 as *const u8 as *mut u8) = ch;
-    //llvm_asm!(
-    //"
-    //li a7, 0x1
-    //lb a0, $0
-    //ecall
-    //" :: "r"(ch):
-    //);
+    // just use opensbi
+    asm!(
+    "
+    li a7, 0x1
+    lw a0, 0({0})
+    ecall
+    " , in(reg) (&ch), out("a0") _, out("a7") _
+    );
 }

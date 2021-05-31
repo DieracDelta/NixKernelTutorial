@@ -55,7 +55,7 @@
       };
       sample_usage = pkgs.writeScript "run_toy_kernel" ''
         #!/usr/bin/env bash
-        ${pkgs.qemu}/bin/qemu-system-riscv64 -bios ${sample_package}/riscv64imac-unknown-none-elf/release/nix_example_kernel -machine sifive_u
+        ${pkgs.qemu}/bin/qemu-system-riscv64 -kernel ${sample_package}/riscv64imac-unknown-none-elf/release/nix_example_kernel -machine sifive_u
       '';
   in
   {
