@@ -1,13 +1,6 @@
 [package]
 name = "nix_example_kernel"
 version = "0.1.0"
-authors = ["jrestivo"]
+authors = ["Justin Restivo"]
 edition = "2018"
 
-[dependencies]
-
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-panic = "abort"

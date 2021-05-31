@@ -4,46 +4,21 @@ ENTRY( _start )
 
 MEMORY
 {
-  ram   (rwx) : ORIGIN = 0x80200000, LENGTH = 0x80000
-  stack (rwx) : ORIGIN = 0x80280000, LENGTH = 0x80000
+  ram (rwx) : ORIGIN = 0x80200000, LENGTH = 0x80000
 }
 
 SECTIONS
 {
-  .text : {
-    PROVIDE(_text_start = .);
+  .kernel : {
     *(.text.init) *(.text .text.*)
-    PROVIDE(_text_end = .);
-  } >ram
-
+    *(.rodata .rodata.*)
+    *(.sdata .sdata.*) *(.data .data.*)
+    *(.sbss .sbss.*) *(.bss .bss.*)
+  } > ram
 
   .stack (NOLOAD) : {
-    . = ALIGN(8);
-    PROVIDE(_start_stack = .);
     . = . + 0x10000;
     PROVIDE(_end_stack = .);
-  } >stack
+  } > ram
 
-  .rodata : {
-    PROVIDE(_rodata_start = .);
-    *(.rodata .rodata.*)
-    PROVIDE(_rodata_end = .);
-  } >ram
-
-  .data : {
-    . = ALIGN(4096);
-    PROVIDE(_data_start = .);
-    *(.sdata .sdata.*) *(.data .data.*)
-    PROVIDE(_data_end = .);
-  } >ram
-
-  .bss :{
-    PROVIDE(_bss_start = .);
-    *(.sbss .sbss.*) *(.bss .bss.*)
-    PROVIDE(_bss_end = .);
-  } >ram
-
-
-  PROVIDE(_memory_start = ORIGIN(ram));
-  PROVIDE(_memory_end = ORIGIN(ram) + LENGTH(ram));
 }

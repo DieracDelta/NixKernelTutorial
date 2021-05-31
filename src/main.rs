@@ -1,12 +1,11 @@
 #![no_std]
 #![no_main]
-#![feature(asm, llvm_asm)]
+#![feature(asm)]
 #![feature(naked_functions)]
 
 use core::panic::PanicInfo;
 
 extern "C" {
-    static __global_pointer: usize;
     static _end_stack: usize;
 }
 
@@ -16,10 +15,10 @@ pub extern "C" fn _start() -> ! {
     unsafe {
         asm!(
             "
-                li sp, 0x80290000
+                la sp, {end_stack}
                 j main
             ",
-            //end_stack = const 0x80290000 as i64,
+            end_stack = sym _end_stack,
             options(noreturn)
         );
     }
@@ -28,7 +27,7 @@ pub extern "C" fn _start() -> ! {
 #[no_mangle]
 pub extern "C" fn main() -> ! {
     unsafe {
-        "hello world from a nixified rust kernel :D\n"
+        "Hello World from a nixified rust kernel :D\n"
             .chars()
             .for_each(|c| write_char(c as u8));
     }
