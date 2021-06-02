@@ -10,10 +10,9 @@ MEMORY
 SECTIONS
 {
   .kernel : {
-    *(.text.init) *(.text .text.*)
+    *(.text .text.*)
     *(.rodata .rodata.*)
-    *(.sdata .sdata.*) *(.data .data.*)
-    *(.sbss .sbss.*) *(.bss .bss.*)
+    *(.data .data.*)
   } > ram
 
   .stack (NOLOAD) : {
